@@ -2,6 +2,8 @@
 
     Convert color string to HEX, RGB, RGBA
 
+[![npm package](https://img.shields.io/npm/v/jolor.svg?logo=npm)](https://www.npmjs.com/package/jolor)
+
 ## Install
 
 ```
