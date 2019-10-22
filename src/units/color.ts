@@ -1,4 +1,5 @@
 import { ColorProperty } from 'csstype';
+import { HtmlColorName } from './html-color-name';
 
 const hex6Pattern = '#[a-f\\d]{6}';
 
@@ -70,7 +71,7 @@ export class Color {
     public parse(p1?: any, p2?: any, p3?: any, p4?: any): void {
         this.clear();
         if (typeof p1 === 'string') {
-            const color = p1 as ColorProperty;
+            const color = this.htmlNameToHex(p1.toLowerCase());
             const colorPatterns = [ColorPattern.hex6, ColorPattern.hex3, ColorPattern.rgb, ColorPattern.rgba];
             const pattern = colorPatterns.find(x => color.match(x));
             if (pattern) {
@@ -102,6 +103,11 @@ export class Color {
             this.innerB = p3;
             this.innerA = p4;
         }
+    }
+
+    private htmlNameToHex(name: string): string {
+        const htmlName: string | undefined = HtmlColorName[name];
+        return htmlName ? htmlName : name;
     }
 
     private intToHex(value: number): string {

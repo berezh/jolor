@@ -1,6 +1,6 @@
 {
     "name": "jolor",
-    "version": "1.0.2",
+    "version": "1.0.4",
     "description": "",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
@@ -38,6 +38,7 @@
     "homepage": "https://github.com/berezh/jolor#readme",
     "devDependencies": {
         "@types/jest": "^24.0.19",
+        "@types/react": "^16.9.9",
         "jest": "^24.9.0",
         "prettier": "^1.18.2",
         "ts-jest": "^24.1.0",
@@ -48,7 +49,5 @@
     "files": [
         "lib/**/*"
     ],
-    "dependencies": {
-        "@types/react": "^16.9.9"
-    }
+    "dependencies": {}
 }

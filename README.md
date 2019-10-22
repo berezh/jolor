@@ -5,7 +5,7 @@
 ## Install
 
 ```
-$ npm install jolor
+npm install jolor
 ```
 
 ## Usage
@@ -13,20 +13,27 @@ $ npm install jolor
 ```js
 import { toHex, toRgb, toRgba } from 'jolor';
 
-toHex(170, 187, 204);
-toHex('rgb(170,187,204)');
-toHex('rgba(170,187,204,1)');
-//=> '#aabbcc'
+toHex('deepskyblue')
+toHex(0, 191, 255);
+toHex('rgb(0,191,255)');
+toHex('rgba(0,191,255,1)');
+//=> '#00bfff'
 
-toRgb(170, 187, 204);
-toRgb('rgba(170,187,204,1)');
-toRgb('#aabbcc');
-//=> 'rgb(170,187,204)'
+toRgb('indigo');
+toRgb(75, 0, 130);
+toRgb('rgba(75,0,130,1)');
+toRgb('#4b0082');
+//=> 'rgb(75,0,130)'
 
-toRgba(170, 187, 204, 0.1);
-//=> 'rgba(170,187,204,0.1)'
+toRgba('sandybrown');
+toRgba('rgb(244,164,96)');
+toRgba('#f4a460');
+//=> 'rgba(244,164,96,1)'
 
-toRgba('rgb(170,187,204)');
-toRgba('#aabbcc');
-//=> 'rgba(170,187,204,1)'
+toRgba(244, 164, 96, 0.1);
+//=> 'rgba(244,164,96,0.1)'
 ```
+
+![#00bfff](https://placehold.it/15/00bfff?text=+) `#00bfff`
+![#4b0082](https://placehold.it/15/4b0082?text=+) `#4b0082`
+![#f4a460](https://placehold.it/15/f4a460?text=+) `#f4a460`
