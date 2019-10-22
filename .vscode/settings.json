@@ -1,0 +1,4 @@
+{
+    "tslint.alwaysShowStatus": true,
+    "tslint.alwaysShowRuleFailuresAsWarnings": true
+}
