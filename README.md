@@ -15,6 +15,7 @@ npm install jolor
 ```js
 import { toHex, toRgb, toRgba } from 'jolor';
 
+
 toHex('deepskyblue');
 toHex(0, 191, 255);
 toHex('rgb(0,191,255)');
@@ -22,9 +23,8 @@ toHex('rgba(0,191,255,1)');
 //=> '#00bfff'
 ```
 
-![#00bfff](https://placehold.it/200x30/00bfff?text=+)
+![#00bfff](https://placehold.it/30/00bfff?text=+)
 
-`deepskyblue | #00bfff | rgb(0,191,255) | rgba(0,191,255,1)`
 
 ```js
 toRgb('indigo');
@@ -34,9 +34,7 @@ toRgb('#4b0082');
 //=> 'rgb(75,0,130)'
 ```
 
-![#4b0082](https://placehold.it/200x30/4b0082?text=+)
-
-`indigo | #4b0082 | rgb(75,0,130) | rgba(75,0,130,1)`
+![#4b0082](https://placehold.it/30/4b0082?text=+)
 
 ```js
 toRgba('sandybrown');
@@ -48,6 +46,4 @@ toRgba(244, 164, 96, 0.1);
 //=> 'rgba(244,164,96,0.1)'
 ```
 
-![#f4a460](https://placehold.it/200x30/f4a460?text=+)
-
-`sandybrown | #f4a460 | rgb(244,164,96) | rgba(244,164,96,1)`
+![#f4a460](https://placehold.it/30/f4a460?text=+)
