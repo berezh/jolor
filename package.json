@@ -27,6 +27,7 @@
         "rgb",
         "hex",
         "rgba",
+        "hsl",
         "javascript",
         "typescript"
     ],

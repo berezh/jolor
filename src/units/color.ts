@@ -1,61 +1,56 @@
 import { ColorProperty } from 'csstype';
+import { ColorPattern } from '.';
+import { Hsl, Rgb } from '../interfaces';
+import { ColorConverter, ColorLength } from './converter';
 import { HtmlColorName } from './html-color-name';
-
-const hex6Pattern = '#[a-f\\d]{6}';
-
-function createRegex(pattern: string): RegExp {
-    // const p = \\d+(\.\d+)?\gi;
-    return new RegExp(pattern, 'gi');
-}
-
-const ColorPattern = {
-    number: createRegex('\\d+(\\.\\d+)?'),
-    hex: createRegex(hex6Pattern + '|#[a-f\\d]{3}'),
-    hex3: createRegex('#[a-f\\d]{3}'),
-    hex6: createRegex(hex6Pattern),
-    rgb: createRegex('rgb\\((\\s*\\d+\\s*,){2}\\s*\\d+\\s*\\)'),
-    rgba: createRegex('rgba\\((\\s*\\d+\\s*,){3}\\s*\\d+(\\.\\d+)?\\s*\\)'),
-};
 
 export class Color {
     public get rgb(): ColorProperty {
-        return `rgb(${this.innerR},${this.innerG},${this.innerB})`;
+        return `rgb(${this.innerRgb.r},${this.innerRgb.g},${this.innerRgb.b})`;
+    }
+
+    public get rgbObject(): Rgb {
+        return this.innerRgb;
+    }
+
+    public get opacity(): number {
+        return this.innerOpacity;
     }
 
     public get rgba(): ColorProperty {
-        return `rgba(${this.innerR},${this.innerG},${this.innerB},${this.innerA})`;
+        return `rgba(${this.innerRgb.r},${this.innerRgb.g},${this.innerRgb.b},${this.innerOpacity})`;
     }
 
     public get hex(): ColorProperty {
-        return `#${this.intToHex(this.innerR)}${this.intToHex(this.innerG)}${this.intToHex(this.innerB)}`;
+        return `#${this.intToHex(this.innerRgb.r)}${this.intToHex(this.innerRgb.g)}${this.intToHex(this.innerRgb.b)}`;
     }
 
-    public get r(): number {
-        return this.innerR;
-    }
-
-    public get g(): number {
-        return this.innerG;
-    }
-
-    public get b(): number {
-        return this.innerB;
-    }
-
-    public get a(): number {
-        return this.innerA;
+    // hsl\\(\\s*\\d+°\\s*(\\d+\\s*%){2}\\s*\\)
+    public get hsl(): ColorProperty {
+        return `hsl(${this.innerHsl.h},${this.innerHsl.s}%,${this.innerHsl.l}%)`;
     }
 
     public get valid(): boolean {
         return this.innerValid;
     }
 
-    private innerR: number = 0;
-    private innerG: number = 0;
-    private innerB: number = 0;
-    private innerA: number = 1;
+    private innerOpacity: number = 0;
+
+    private innerRgb: Rgb = {
+        r: 0,
+        g: 0,
+        b: 0,
+    };
+
+    private innerHsl: Hsl = {
+        h: 0,
+        s: 0,
+        l: 0,
+    };
+
     private innerValid: boolean = false;
 
+    // todo: new parameter number[]
     constructor(color?: ColorProperty);
     constructor(r: number, g: number, b: number, a?: number);
     constructor(p1?: any, p2?: any, p3?: any, p4?: any) {
@@ -70,38 +65,75 @@ export class Color {
     public parse(r: number, g: number, b: number, a?: number): void;
     public parse(p1?: any, p2?: any, p3?: any, p4?: any): void {
         this.clear();
+        let rgbMode = false;
         if (typeof p1 === 'string') {
             const color = this.htmlNameToHex(p1.toLowerCase());
-            const colorPatterns = [ColorPattern.hex6, ColorPattern.hex3, ColorPattern.rgb, ColorPattern.rgba];
+            const colorPatterns = [
+                ColorPattern.hex6,
+                ColorPattern.hex3,
+                ColorPattern.rgb,
+                ColorPattern.rgba,
+                ColorPattern.hsl,
+            ];
             const pattern = colorPatterns.find(x => color.match(x));
             if (pattern) {
                 this.innerValid = true;
                 if (pattern === ColorPattern.hex6) {
-                    this.innerR = this.hexToInt(color.substr(1, 2));
-                    this.innerG = this.hexToInt(color.substr(3, 2));
-                    this.innerB = this.hexToInt(color.substr(5, 2));
+                    this.innerRgb = {
+                        r: this.hexToInt(color.substr(1, 2)),
+                        g: this.hexToInt(color.substr(3, 2)),
+                        b: this.hexToInt(color.substr(5, 2)),
+                    };
+                    rgbMode = true;
                 } else if (pattern === ColorPattern.hex3) {
-                    this.innerR = this.subHexToInt(color.charAt(1));
-                    this.innerG = this.subHexToInt(color.charAt(2));
-                    this.innerB = this.subHexToInt(color.charAt(3));
+                    this.innerRgb = {
+                        r: this.subHexToInt(color.charAt(1)),
+                        g: this.subHexToInt(color.charAt(2)),
+                        b: this.subHexToInt(color.charAt(3)),
+                    };
+                    rgbMode = true;
                 } else if (pattern === ColorPattern.rgb) {
                     const numbers = color.match(ColorPattern.number) as RegExpExecArray;
-                    this.innerR = this.getSubRgb(numbers[0]);
-                    this.innerG = this.getSubRgb(numbers[1]);
-                    this.innerB = this.getSubRgb(numbers[2]);
+                    this.innerRgb = {
+                        r: this.getSubRgb(numbers[0]),
+                        g: this.getSubRgb(numbers[1]),
+                        b: this.getSubRgb(numbers[2]),
+                    };
+                    rgbMode = true;
                 } else if (pattern === ColorPattern.rgba) {
                     const numbers = color.match(ColorPattern.number) as RegExpExecArray;
-                    this.innerR = this.getSubRgb(numbers[0]);
-                    this.innerG = this.getSubRgb(numbers[1]);
-                    this.innerB = this.getSubRgb(numbers[2]);
-                    this.innerA = this.fixRange(parseFloat(numbers[3]), 0, 1);
+                    this.innerRgb = {
+                        r: this.getSubRgb(numbers[0]),
+                        g: this.getSubRgb(numbers[1]),
+                        b: this.getSubRgb(numbers[2]),
+                    };
+                    this.innerOpacity = this.fixRange(parseFloat(numbers[3]), 0, 1);
+                    rgbMode = true;
+                } else if (pattern === ColorPattern.hsl) {
+                    const numbers = color.match(ColorPattern.number) as RegExpExecArray;
+                    this.innerHsl = {
+                        h: this.fixRange(parseFloat(numbers[0]), 0, ColorLength),
+                        s: this.fixRange(parseFloat(numbers[1]), 0, 100),
+                        l: this.fixRange(parseFloat(numbers[2]), 0, 100),
+                    };
+
+                    this.innerRgb = ColorConverter.hslToRgb(this.innerHsl);
                 }
+
             }
         } else if (typeof p1 === 'number' && typeof p2 === 'number' && typeof p3 === 'number') {
-            this.innerR = p1;
-            this.innerG = p2;
-            this.innerB = p3;
-            this.innerA = p4;
+            this.innerRgb = {
+                r: p1,
+                g: p2,
+                b: p3,
+            };
+            this.innerOpacity = p4;
+            rgbMode = true;
+            this.innerValid = true;
+        }
+
+        if (rgbMode) {
+            this.innerHsl = ColorConverter.rgbToHsl(this.innerRgb);
         }
     }
 
@@ -119,10 +151,18 @@ export class Color {
     }
 
     private clear(): void {
-        this.innerR = 0;
-        this.innerG = 0;
-        this.innerB = 0;
-        this.innerA = 1;
+        this.innerRgb = {
+            r: 0,
+            g: 0,
+            b: 0,
+        };
+
+        this.innerHsl = {
+            h: 0,
+            s: 0,
+            l: 0,
+        };
+        this.innerOpacity = 1;
         this.innerValid = false;
     }
 

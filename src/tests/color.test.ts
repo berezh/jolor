@@ -7,18 +7,18 @@ it('empty', () => {
 });
 it('3 number: 201, 202, 203', () => {
     const c = new Color(201, 202, 203);
-    expect(c.r).toEqual(201);
-    expect(c.g).toEqual(202);
-    expect(c.b).toEqual(203);
+    expect(c.rgbObject.r).toEqual(201);
+    expect(c.rgbObject.g).toEqual(202);
+    expect(c.rgbObject.b).toEqual(203);
     expect(c.rgb).toEqual('rgb(201,202,203)');
     expect(c.hex).toEqual('#c9cacb');
 });
 it('4 number: 201, 202, 203, 0.7', () => {
     const c = new Color(201, 202, 203, 0.7);
-    expect(c.r).toEqual(201);
-    expect(c.g).toEqual(202);
-    expect(c.b).toEqual(203);
-    expect(c.a).toEqual(0.7);
+    expect(c.rgbObject.r).toEqual(201);
+    expect(c.rgbObject.g).toEqual(202);
+    expect(c.rgbObject.b).toEqual(203);
+    expect(c.opacity).toEqual(0.7);
     expect(c.rgba).toEqual('rgba(201,202,203,0.7)');
 });
 it('string', () => {

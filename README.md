@@ -1,6 +1,6 @@
 # Jolor
 
-    Convert color string to HEX, RGB, RGBA
+    Convert color string to HEX, RGB, RGBA, HSL
 
 [![npm package](https://img.shields.io/npm/v/jolor.svg?logo=npm)](https://www.npmjs.com/package/jolor)
 
@@ -13,13 +13,13 @@ npm install jolor
 ## Usage
 
 ```js
-import { toHex, toRgb, toRgba } from 'jolor';
+import { toHex, toRgb, toRgba, toHsl } from 'jolor';
 
 
 toHex('deepskyblue');
 toHex(0, 191, 255);
 toHex('rgb(0,191,255)');
-toHex('rgba(0,191,255,1)');
+toHex('hsl(195,100%,50%)');
 //=> '#00bfff'
 ```
 
@@ -47,3 +47,14 @@ toRgba(244, 164, 96, 0.1);
 ```
 
 ![#f4a460](https://placehold.it/30/f4a460?text=+)
+
+
+```js
+toHsl('purple');
+toHsl('rgb(128,0,128)');
+toHsl('#800080');
+//=> 'hsl(300,100%,25%)'
+```
+
+![#800080](https://placehold.it/30/800080?text=+)
+

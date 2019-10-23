@@ -1,58 +1,13 @@
-export interface Rgb {
-    r: number;
-    g: number;
-    b: number;
-}
+import { Hsl, Rgb } from '../interfaces';
 
-export interface Hsl {
-    h: number;
-    s: number;
-    l: number;
-}
-
-const maxLength = 255;
+export const ColorLength = 255;
+export const MaxDegree = 360;
 
 export const ColorConverter = {
-    // rgbToHex: (
-    //     r: number,
-    //     g: number,
-    //     b: number,
-    // ): {
-    //     h: number;
-    //     s: number;
-    //     l: number;
-    // } => {
-    //     let h = 0;
-    //     const s = 0;
-    //     const l = 0;
-
-    //     const rR = r / maxLength;
-    //     const gR = g / maxLength;
-    //     const bR = b / maxLength;
-
-    //     const cMax = Math.max(rR, gR, bR);
-    //     const cMin = Math.min(rR, gR, bR);
-
-    //     const delta = Math.abs(cMax - cMin);
-
-    //     if (cMax === rR) {
-    //         h = 0.6 * ((gR - bR) / delta);
-    //     } else if (cMax === gR) {
-    //         h = 0.6 * ((bR - rR) / delta + 2);
-    //     } else {
-    //         h = 0;
-    //     }
-
-    //     return {
-    //         h,
-    //         s,
-    //         l,
-    //     };
-    // },
     rgbToHsl: (rgb: Rgb): Hsl => {
-        const r = rgb.r / maxLength;
-        const g = rgb.g / maxLength;
-        const b = rgb.b / maxLength;
+        const r = rgb.r / ColorLength;
+        const g = rgb.g / ColorLength;
+        const b = rgb.b / ColorLength;
         const min = Math.min(r, g, b);
         const max = Math.max(r, g, b);
         const delta = max - min;
@@ -69,10 +24,10 @@ export const ColorConverter = {
             h = 4 + (r - g) / delta;
         }
 
-        h = Math.min(h * 60, 360);
+        h = Math.round(Math.min(h * 60, MaxDegree));
 
         if (h < 0) {
-            h += 360;
+            h += MaxDegree;
         }
 
         const l = (min + max) / 2;
@@ -87,40 +42,57 @@ export const ColorConverter = {
 
         return { h, s: Math.round(s * 100), l: Math.round(l * 100) };
     },
-    // rgb2hue: (r1: number, g1: number, b1: number): number => {
-    //     const r = r1 / 255;
-    //     const g = g1 / 255;
-    //     const b = b1 / 255;
-    //     const max = Math.max(r, g, b);
-    //     const min = Math.min(r, g, b);
-    //     const c = max - min;
-    //     let h = 0;
-    //     let segment = 0;
-    //     let shift = 0;
-    //     if (c !== 0) {
-    //         switch (max) {
-    //             case r:
-    //                 segment = (g - b) / c;
-    //                 shift = 0 / 60; // R° / (360° / hex sides)
-    //                 if (segment < 0) {
-    //                     // hue > 180, full rotation
-    //                     shift = 360 / 60; // R° / (360° / hex sides)
-    //                 }
-    //                 h = segment + shift;
-    //                 break;
-    //             case g:
-    //                 segment = (b - r) / c;
-    //                 shift = 120 / 60; // G° / (360° / hex sides)
-    //                 h = segment + shift;
-    //                 break;
-    //             case b:
-    //                 segment = (r - g) / c;
-    //                 shift = 240 / 60; // B° / (360° / hex sides)
-    //                 h = segment + shift;
-    //         }
-    //     }
+    hslToRgb: (hsl: Hsl): Rgb => {
+        const h = hsl.h / MaxDegree;
+        const s = hsl.s / 100;
+        const l = hsl.l / 100;
+        let t2;
+        let val;
 
-    // },
+        if (s === 0) {
+            val = Math.round(l * ColorLength);
+            return { r: val, g: val, b: val };
+        }
+
+        if (l < 0.5) {
+            t2 = l * (1 + s);
+        } else {
+            t2 = l + s - l * s;
+        }
+
+        const t1 = 2 * l - t2;
+
+        const result: number[] = [0, 0, 0];
+        for (let i = 0; i < 3; i++) {
+            let t3 = h + (1 / 3) * -(i - 1);
+            if (t3 < 0) {
+                t3++;
+            }
+
+            if (t3 > 1) {
+                t3--;
+            }
+
+            if (6 * t3 < 1) {
+                val = t1 + (t2 - t1) * 6 * t3;
+            } else if (2 * t3 < 1) {
+                val = t2;
+            } else if (3 * t3 < 2) {
+                val = t1 + (t2 - t1) * (2 / 3 - t3) * 6;
+            } else {
+                val = t1;
+            }
+
+            result[i] = Math.round(val * 255);
+        }
+
+        return {
+            r: result[0],
+            g: result[1],
+            b: result[2],
+        };
+    },
+
     // https://stackoverflow.com/questions/39118528/rgb-to-hsl-conversion
     // https://github.com/Qix-/color-convert/blob/HEAD/conversions.js
 };
