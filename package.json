@@ -1,6 +1,6 @@
 {
     "name": "jolor",
-    "version": "1.0.6",
+    "version": "1.1.0",
     "description": "",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
@@ -24,6 +24,9 @@
         "color",
         "parser",
         "converter",
+        "format",
+        "html",
+        "css",
         "rgb",
         "hex",
         "rgba",
