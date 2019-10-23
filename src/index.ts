@@ -1,6 +1,8 @@
 import { ColorProperty } from 'csstype';
 import { Color } from './units';
 
+export { Color };
+
 export function toHex(color?: ColorProperty): ColorProperty | undefined;
 export function toHex(color: number[]): ColorProperty | undefined;
 export function toHex(r: number, g: number, b: number, a?: number): ColorProperty | undefined;

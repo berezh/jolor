@@ -1,6 +1,6 @@
 # Jolor
 
-    Convert color string to HEX, RGB, RGBA, HSL
+    JavaScript color converter to HEX, RGB, RGBA, HSL
 
 [![npm package](https://img.shields.io/npm/v/jolor.svg?logo=npm)](https://www.npmjs.com/package/jolor)
 
