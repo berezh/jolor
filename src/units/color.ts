@@ -50,8 +50,8 @@ export class Color {
 
     private innerValid: boolean = false;
 
-    // todo: new parameter number[]
     constructor(color?: ColorProperty);
+    constructor(color: number[]);
     constructor(r: number, g: number, b: number, a?: number);
     constructor(p1?: any, p2?: any, p3?: any, p4?: any) {
         this.parse(p1, p2, p3, p4);
@@ -62,6 +62,7 @@ export class Color {
     }
 
     public parse(color?: ColorProperty): void;
+    public parse(color: number[]): void;
     public parse(r: number, g: number, b: number, a?: number): void;
     public parse(p1?: any, p2?: any, p3?: any, p4?: any): void {
         this.clear();
@@ -129,6 +130,19 @@ export class Color {
             this.innerOpacity = p4;
             rgbMode = true;
             this.innerValid = true;
+        } else if (Array.isArray(p1)) {
+            if (p1.length >= 3) {
+                this.innerRgb = {
+                    r: this.getSubRgb(p1[0]),
+                    g: this.getSubRgb(p1[1]),
+                    b: this.getSubRgb(p1[2]),
+                };
+                rgbMode = true;
+                this.innerValid = true;
+            }
+            if (p1.length >= 4) {
+                this.innerOpacity = this.fixRange(parseFloat(p1[3]), 0, 1);
+            }
         }
 
         if (rgbMode) {
