@@ -19,7 +19,7 @@ import { toHex, toRgb, toRgba, toHsl } from 'jolor';
 toHex('deepskyblue');
 toHex(0, 191, 255);
 toHex('rgb(0,191,255)');
-toHex('hsl(195,100%,50%)');
+toHex('hsl(195,100%,50%)')
 //=> '#00bfff'
 ```
 
@@ -29,9 +29,11 @@ toHex('hsl(195,100%,50%)');
 ```js
 toRgb('indigo');
 toRgb(75, 0, 130);
-toRgb('rgba(75,0,130,1)');
 toRgb('#4b0082');
 //=> 'rgb(75,0,130)'
+
+toRgb('hsl(275, 100%, 25%)');
+//=> 'rgb(74, 0, 128)'
 ```
 
 ![#4b0082](https://placehold.it/30/4b0082?text=+)
@@ -44,6 +46,10 @@ toRgba('#f4a460');
 
 toRgba(244, 164, 96, 0.1);
 //=> 'rgba(244,164,96,0.1)'
+
+toRgba('hsl(28, 87%, 67%)');
+//=> 'rgba(244,166,98,1)'
+
 ```
 
 ![#f4a460](https://placehold.it/30/f4a460?text=+)
@@ -51,6 +57,7 @@ toRgba(244, 164, 96, 0.1);
 
 ```js
 toHsl('purple');
+toHsl(128, 0, 128);
 toHsl('rgb(128,0,128)');
 toHsl('#800080');
 //=> 'hsl(300,100%,25%)'

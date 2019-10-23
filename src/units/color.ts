@@ -112,14 +112,13 @@ export class Color {
                 } else if (pattern === ColorPattern.hsl) {
                     const numbers = color.match(ColorPattern.number) as RegExpExecArray;
                     this.innerHsl = {
-                        h: this.fixRange(parseFloat(numbers[0]), 0, ColorLength),
+                        h: parseFloat(numbers[0]),
                         s: this.fixRange(parseFloat(numbers[1]), 0, 100),
                         l: this.fixRange(parseFloat(numbers[2]), 0, 100),
                     };
 
                     this.innerRgb = ColorConverter.hslToRgb(this.innerHsl);
                 }
-
             }
         } else if (typeof p1 === 'number' && typeof p2 === 'number' && typeof p3 === 'number') {
             this.innerRgb = {

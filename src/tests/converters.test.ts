@@ -1,10 +1,24 @@
 import { ColorConverter } from '../units';
 
-
 it('rgbToHsl', () => {
-    rgbToHsl([75, 0, 130], [275, 100, 25]);
+    // rgbToHsl([75, 0, 130], [275, 100, 25]);
     // toRgb('hsl(275,100%,25%)')).toEqual('rgb(75,0,130)')
-    hslToRgb([275, 100, 25], [75, 0, 130]);
+
+    const hsl = [275, 100, 25];
+    const rgb = [74, 0, 128];
+    hslToRgb(hsl, rgb);
+
+    expect(ColorConverter.hslToRgb({ h: hsl[0], s: hsl[1], l: hsl[2] })).toMatchObject({
+        r: rgb[0],
+        g: rgb[1],
+        b: rgb[2],
+    });
+
+    expect(ColorConverter.hslToRgb({ h: 275, s: 100, l: 25 })).toMatchObject({
+        r: 74,
+        g: 0,
+        b: 128,
+    });
 });
 
 // it('rgbToHsl', () => {
