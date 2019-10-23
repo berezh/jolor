@@ -1,7 +1,7 @@
-import { ColorPattern } from '../units';
+import { Color } from '../units';
 
 it('regex: hsl', () => {
-    expect('hsl(100,10%,10%)'.match(ColorPattern.hsl)).toBeTruthy();
-    expect('hsl( 100 , 10% , 10% )'.match(ColorPattern.hsl)).toBeTruthy();
-    expect('hsl(100,        10%,10%)'.match(ColorPattern.hsl)).toBeTruthy();
+    expect(Color.isHsl('hsl(100,10%,10%)')).toBeTruthy();
+    expect(Color.isHsl('hsl( 100 , 10% , 10% )')).toBeTruthy();
+    expect(Color.isHsl('hsl(100,        10%,10%)')).toBeTruthy();
 });
