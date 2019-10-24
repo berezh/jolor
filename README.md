@@ -1,8 +1,11 @@
 # Jolor
 
-    JavaScript color converter to HEX, RGB, RGBA, HSL
+JavaScript color converter to HEX, RGB, RGBA, HSL
 
-[![npm package](https://img.shields.io/npm/v/jolor.svg?logo=npm)](https://www.npmjs.com/package/jolor)
+
+<a href="https://www.npmjs.com/package/jolor">
+    <img src="https://nodei.co/npm/jolor.png?mini=true">
+</a>
 
 ## Install
 
