@@ -35,7 +35,12 @@ export class Color {
     }
 
     public static isColor(raw: string): boolean {
-        return Color.isHex(raw) || Color.isRgb(raw) || Color.isRgba(raw) || Color.isHsl(raw);
+        return Color.isHex(raw) || Color.isRgb(raw) || Color.isRgba(raw) || Color.isHsl(raw) || Color.isColorName(raw);
+    }
+
+    public static isColorName(raw: string): boolean {
+        const key = typeof raw === 'string' ? raw.toLowerCase() : '';
+        return HtmlColorName[key] ? true : false;
     }
 
     public static isHex(raw: string): boolean {
@@ -100,33 +105,38 @@ export class Color {
         this.clear();
         let rgbMode = false;
         if (typeof p1 === 'string') {
-            const color = this.htmlNameToHex(p1.toLowerCase());
-            if (Color.isColor(color)) {
+            let colorKey = p1.toLowerCase();
+            if (Color.isColor(colorKey)) {
                 this.innerValid = true;
-                if (Color.isHex6(color)) {
+                // if color name
+                if (Color.isColorName(colorKey)) {
+                    colorKey = HtmlColorName[colorKey];
+                }
+
+                if (Color.isHex6(colorKey)) {
                     this.innerRgb = {
-                        r: this.hexToInt(color.substr(1, 2)),
-                        g: this.hexToInt(color.substr(3, 2)),
-                        b: this.hexToInt(color.substr(5, 2)),
+                        r: this.hexToInt(colorKey.substr(1, 2)),
+                        g: this.hexToInt(colorKey.substr(3, 2)),
+                        b: this.hexToInt(colorKey.substr(5, 2)),
                     };
                     rgbMode = true;
-                } else if (Color.isHex3(color)) {
+                } else if (Color.isHex3(colorKey)) {
                     this.innerRgb = {
-                        r: this.subHexToInt(color.charAt(1)),
-                        g: this.subHexToInt(color.charAt(2)),
-                        b: this.subHexToInt(color.charAt(3)),
+                        r: this.subHexToInt(colorKey.charAt(1)),
+                        g: this.subHexToInt(colorKey.charAt(2)),
+                        b: this.subHexToInt(colorKey.charAt(3)),
                     };
                     rgbMode = true;
-                } else if (Color.isRgb(color)) {
-                    const numbers = color.match(ColorPattern.number) as RegExpExecArray;
+                } else if (Color.isRgb(colorKey)) {
+                    const numbers = colorKey.match(ColorPattern.number) as RegExpExecArray;
                     this.innerRgb = {
                         r: this.getSubRgb(numbers[0]),
                         g: this.getSubRgb(numbers[1]),
                         b: this.getSubRgb(numbers[2]),
                     };
                     rgbMode = true;
-                } else if (Color.isRgba(color)) {
-                    const numbers = color.match(ColorPattern.number) as RegExpExecArray;
+                } else if (Color.isRgba(colorKey)) {
+                    const numbers = colorKey.match(ColorPattern.number) as RegExpExecArray;
                     this.innerRgb = {
                         r: this.getSubRgb(numbers[0]),
                         g: this.getSubRgb(numbers[1]),
@@ -134,8 +144,8 @@ export class Color {
                     };
                     this.innerOpacity = this.fixRange(parseFloat(numbers[3]), 0, 1);
                     rgbMode = true;
-                } else if (Color.isHsl(color)) {
-                    const numbers = color.match(ColorPattern.number) as RegExpExecArray;
+                } else if (Color.isHsl(colorKey)) {
+                    const numbers = colorKey.match(ColorPattern.number) as RegExpExecArray;
                     this.innerHsl = {
                         h: parseFloat(numbers[0]),
                         s: this.fixRange(parseFloat(numbers[1]), 0, 100),
@@ -172,11 +182,6 @@ export class Color {
         if (rgbMode) {
             this.innerHsl = ColorConverter.rgbToHsl(this.innerRgb);
         }
-    }
-
-    private htmlNameToHex(name: string): string {
-        const htmlName: string | undefined = HtmlColorName[name];
-        return htmlName ? htmlName : name;
     }
 
     private intToHex(value: number): string {
