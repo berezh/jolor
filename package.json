@@ -1,7 +1,7 @@
 {
     "name": "jolor",
-    "version": "1.1.5",
-    "description": "",
+    "version": "1.1.6",
+    "description": "JavaScript color converter",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "scripts": {
@@ -35,7 +35,7 @@
         "typescript"
     ],
     "author": "Vadym Poberezhnyi",
-    "license": "ISC",
+    "license": "MIT",
     "bugs": {
         "url": "https://github.com/berezh/jolor/issues"
     },
