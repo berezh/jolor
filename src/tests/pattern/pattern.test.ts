@@ -1,4 +1,4 @@
-import { ColorRegexPattern } from '../units';
+import { ColorRegexPattern } from '../../units';
 
 it('regex: hex3', () => {
     const colorRegex = new ColorRegexPattern();

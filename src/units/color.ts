@@ -33,11 +33,7 @@ export class Color {
     public get valid(): boolean {
         return this.innerValid;
     }
-
-    private static isMatched(pattern: RegExp, raw: string): boolean {
-        return typeof raw === 'string' && raw.match(pattern) !== null;
-    }
-
+    
     private colorRegex = new ColorRegexPattern();
     private numberRegex = new RegExp('\\d+(\\.\\d+)?', 'gi');
 

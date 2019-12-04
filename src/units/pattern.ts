@@ -8,6 +8,14 @@ export class ColorRegexPattern {
     private rgbaPattern: string = 'rgba\\((\\s*\\d+\\s*,){3}\\s*\\d+(\\.\\d+)?\\s*\\)';
     private hslPattern: string = 'hsl\\(\\s*\\d+\\s*(,\\s*\\d+%\\s*){2}\\s*\\)';
     private colorNamePattern: string = this.join(...Object.keys(HtmlColorName));
+    private anyColorPattern = this.join(
+        this.hex3Pattern,
+        this.hex6Pattern,
+        this.rgbPattern,
+        this.rgbaPattern,
+        this.hslPattern,
+        ...Object.keys(HtmlColorName),
+    );
 
     // private colorPattern: string = this.join(
     //     this.hexPattern,
@@ -24,6 +32,7 @@ export class ColorRegexPattern {
     private rgbaReg = this.wrapRegex(this.rgbaPattern);
     private hslReg = this.wrapRegex(this.hslPattern);
     private colorNameReg = this.wrapRegex(this.colorNamePattern);
+    private anyColorReg = new RegExp(this.anyColorPattern, 'gi');
 
     public get test(): string {
         return this.colorNamePattern;
@@ -87,6 +96,11 @@ export class ColorRegexPattern {
 
     public isColor(text: string): boolean {
         return this.isHex(text) || this.isRgb(text) || this.isRgba(text) || this.isHsl(text) || this.isColorName(text);
+    }
+
+    public matchColors(text: string): string[] {
+        const matches = (text || '').match(this.anyColorReg);
+        return matches === null ? [] : matches;
     }
 
     private match(text: string, regexp: RegExp): boolean {
