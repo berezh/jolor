@@ -5,6 +5,7 @@ it('empty', () => {
     expect(c.rgb).toEqual('rgb(0,0,0)');
     expect(c.rgba).toEqual('rgba(0,0,0,1)');
 });
+
 it('3 number: 201, 202, 203', () => {
     const c = new Color(201, 202, 203);
     expect(c.rgbObject.r).toEqual(201);
