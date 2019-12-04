@@ -1,25 +1,5 @@
 import { HtmlColorName } from './html-color-name';
 
-const hex6Pattern = '#[a-f\\d]{6}';
-
-function createRegex(pattern: string): RegExp {
-    return new RegExp(pattern, 'gi');
-}
-
-function wrapEmpty(pattern: string): RegExp {
-    return new RegExp(`^\\s\*${pattern}\\s\*$`, 'gi');
-}
-
-export const ColorPattern = {
-    number: createRegex('\\d+(\\.\\d+)?'),
-    hex: wrapEmpty(hex6Pattern + '|#[a-f\\d]{3}'),
-    hex3: wrapEmpty('#[a-f\\d]{3}'),
-    hex6: wrapEmpty(hex6Pattern),
-    rgb: wrapEmpty('rgb\\((\\s*\\d+\\s*,){2}\\s*\\d+\\s*\\)'),
-    rgba: wrapEmpty('rgba\\((\\s*\\d+\\s*,){3}\\s*\\d+(\\.\\d+)?\\s*\\)'),
-    hsl: wrapEmpty('hsl\\(\\s*\\d+\\s*(,\\s*\\d+%\\s*){2}\\s*\\)'),
-};
-
 export class ColorRegexPattern {
     private hex3Pattern: string = '#[a-f\\d]{3}';
     private hex6Pattern: string = '#[a-f\\d]{6}';
@@ -29,14 +9,13 @@ export class ColorRegexPattern {
     private hslPattern: string = 'hsl\\(\\s*\\d+\\s*(,\\s*\\d+%\\s*){2}\\s*\\)';
     private colorNamePattern: string = this.join(...Object.keys(HtmlColorName));
 
-    private colorPattern: string = this.join(
-        this.hex3Pattern,
-        this.hex6Pattern,
-        this.rgbPattern,
-        this.rgbaPattern,
-        this.hslPattern,
-        ...Object.keys(HtmlColorName),
-    );
+    // private colorPattern: string = this.join(
+    //     this.hexPattern,
+    //     // this.rgbPattern,
+    //     // this.rgbaPattern,
+    //     // this.hslPattern,
+    //     ...Object.keys(HtmlColorName),
+    // );
 
     private hex3Reg = this.wrapRegex(this.hex3Pattern);
     private hex6Reg = this.wrapRegex(this.hex6Pattern);
@@ -45,7 +24,6 @@ export class ColorRegexPattern {
     private rgbaReg = this.wrapRegex(this.rgbaPattern);
     private hslReg = this.wrapRegex(this.hslPattern);
     private colorNameReg = this.wrapRegex(this.colorNamePattern);
-    private colorReg = this.wrapRegex(this.colorPattern);
 
     public get test(): string {
         return this.colorNamePattern;
@@ -79,10 +57,6 @@ export class ColorRegexPattern {
         return this.colorNameReg;
     }
 
-    public get color(): RegExp {
-        return this.colorReg;
-    }
-
     public isHex3(text: string): boolean {
         return this.match(text, this.hex3Reg);
     }
@@ -112,11 +86,10 @@ export class ColorRegexPattern {
     }
 
     public isColor(text: string): boolean {
-        return this.match(text, this.colorReg);
+        return this.isHex(text) || this.isRgb(text) || this.isRgba(text) || this.isHsl(text) || this.isColorName(text);
     }
 
     private match(text: string, regexp: RegExp): boolean {
-        // return (text || '').match(regexp) !== null;
         regexp.lastIndex = 0;
         return regexp.test(text);
     }

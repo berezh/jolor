@@ -90,5 +90,5 @@ it('regex: isColor', () => {
 
 it('regex: isColor false', () => {
     const colorRegex = new ColorRegexPattern();
-    expect(colorRegex.isHex('#1111110')).toBeFalsy();
+    expect(colorRegex.isColor('#1111110')).toBeFalsy();
 });
