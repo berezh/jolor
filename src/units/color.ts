@@ -3,6 +3,7 @@ import { ColorPattern } from '.';
 import { Hsl, Rgb } from '../interfaces';
 import { ColorConverter, ColorLength } from './converter';
 import { HtmlColorName } from './html-color-name';
+import { ColorRegexPattern } from './pattern';
 
 export class Color {
     public get rgb(): ColorProperty {
@@ -34,42 +35,44 @@ export class Color {
         return this.innerValid;
     }
 
-    public static isColor(raw: string): boolean {
-        return Color.isHex(raw) || Color.isRgb(raw) || Color.isRgba(raw) || Color.isHsl(raw) || Color.isColorName(raw);
-    }
+    // public static isColor(raw: string): boolean {
+    //     return Color.isHex(raw) || Color.isRgb(raw) || Color.isRgba(raw) || Color.isHsl(raw) || Color.isColorName(raw);
+    // }
 
-    public static isColorName(raw: string): boolean {
-        const key = typeof raw === 'string' ? raw.toLowerCase() : '';
-        return HtmlColorName[key] ? true : false;
-    }
+    // public static isColorName(raw: string): boolean {
+    //     const key = typeof raw === 'string' ? raw.toLowerCase() : '';
+    //     return HtmlColorName[key] ? true : false;
+    // }
 
-    public static isHex(raw: string): boolean {
-        return Color.isMatched(ColorPattern.hex, raw);
-    }
+    // public static isHex(raw: string): boolean {
+    //     return Color.isMatched(ColorPattern.hex, raw);
+    // }
 
-    public static isHex3(raw: string): boolean {
-        return Color.isMatched(ColorPattern.hex3, raw);
-    }
+    // public static isHex3(raw: string): boolean {
+    //     return Color.isMatched(ColorPattern.hex3, raw);
+    // }
 
-    public static isHex6(raw: string): boolean {
-        return Color.isMatched(ColorPattern.hex6, raw);
-    }
+    // public static isHex6(raw: string): boolean {
+    //     return Color.isMatched(ColorPattern.hex6, raw);
+    // }
 
-    public static isRgb(raw: string): boolean {
-        return Color.isMatched(ColorPattern.rgb, raw);
-    }
+    // public static isRgb(raw: string): boolean {
+    //     return Color.isMatched(ColorPattern.rgb, raw);
+    // }
 
-    public static isRgba(raw: string): boolean {
-        return Color.isMatched(ColorPattern.rgba, raw);
-    }
+    // public static isRgba(raw: string): boolean {
+    //     return Color.isMatched(ColorPattern.rgba, raw);
+    // }
 
-    public static isHsl(raw: string): boolean {
-        return Color.isMatched(ColorPattern.hsl, raw);
-    }
+    // public static isHsl(raw: string): boolean {
+    //     return Color.isMatched(ColorPattern.hsl, raw);
+    // }
 
     private static isMatched(pattern: RegExp, raw: string): boolean {
         return typeof raw === 'string' && raw.match(pattern) !== null;
     }
+
+    private colorRegex = new ColorRegexPattern();
 
     private innerOpacity: number = 0;
 
@@ -106,28 +109,28 @@ export class Color {
         let rgbMode = false;
         if (typeof p1 === 'string') {
             let colorKey = p1.toLowerCase();
-            if (Color.isColor(colorKey)) {
+            if (this.colorRegex.isColor(colorKey)) {
                 this.innerValid = true;
                 // if color name
-                if (Color.isColorName(colorKey)) {
+                if (this.colorRegex.isColorName(colorKey)) {
                     colorKey = HtmlColorName[colorKey];
                 }
 
-                if (Color.isHex6(colorKey)) {
+                if (this.colorRegex.isHex6(colorKey)) {
                     this.innerRgb = {
                         r: this.hexToInt(colorKey.substr(1, 2)),
                         g: this.hexToInt(colorKey.substr(3, 2)),
                         b: this.hexToInt(colorKey.substr(5, 2)),
                     };
                     rgbMode = true;
-                } else if (Color.isHex3(colorKey)) {
+                } else if (this.colorRegex.isHex3(colorKey)) {
                     this.innerRgb = {
                         r: this.subHexToInt(colorKey.charAt(1)),
                         g: this.subHexToInt(colorKey.charAt(2)),
                         b: this.subHexToInt(colorKey.charAt(3)),
                     };
                     rgbMode = true;
-                } else if (Color.isRgb(colorKey)) {
+                } else if (this.colorRegex.isRgb(colorKey)) {
                     const numbers = colorKey.match(ColorPattern.number) as RegExpExecArray;
                     this.innerRgb = {
                         r: this.getSubRgb(numbers[0]),
@@ -135,7 +138,7 @@ export class Color {
                         b: this.getSubRgb(numbers[2]),
                     };
                     rgbMode = true;
-                } else if (Color.isRgba(colorKey)) {
+                } else if (this.colorRegex.isRgba(colorKey)) {
                     const numbers = colorKey.match(ColorPattern.number) as RegExpExecArray;
                     this.innerRgb = {
                         r: this.getSubRgb(numbers[0]),
@@ -144,7 +147,7 @@ export class Color {
                     };
                     this.innerOpacity = this.fixRange(parseFloat(numbers[3]), 0, 1);
                     rgbMode = true;
-                } else if (Color.isHsl(colorKey)) {
+                } else if (this.colorRegex.isHsl(colorKey)) {
                     const numbers = colorKey.match(ColorPattern.number) as RegExpExecArray;
                     this.innerHsl = {
                         h: parseFloat(numbers[0]),
