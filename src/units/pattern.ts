@@ -98,9 +98,14 @@ export class ColorRegexPattern {
         return this.isHex(text) || this.isRgb(text) || this.isRgba(text) || this.isHsl(text) || this.isColorName(text);
     }
 
-    public matchColors(text: string): string[] {
-        const matches = (text || '').match(this.anyColorReg);
-        return matches === null ? [] : matches;
+    public foreachColors(text: string, accessor: (matchedColor: string) => string): string {
+        const matches = (text || '').match(this.anyColorReg) || [];
+        let result = text;
+        matches.forEach(x => {
+            result = result.replace(x, accessor(x));
+        });
+
+        return result;
     }
 
     private match(text: string, regexp: RegExp): boolean {
