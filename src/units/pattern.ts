@@ -3,7 +3,7 @@ import { HtmlColorName } from './html-color-name';
 export class ColorRegexPattern {
     private hex3Pattern: string = '#[a-f\\d]{3}';
     private hex6Pattern: string = '#[a-f\\d]{6}';
-    private hexPattern: string = '#([a-f\\d]{6}|[a-f\\d]{3})';
+    private hexPattern: string = this.join(this.hex6Pattern, this.hex3Pattern);
     private rgbPattern: string = 'rgb\\((\\s*\\d+\\s*,){2}\\s*\\d+\\s*\\)';
     private rgbaPattern: string = 'rgba\\((\\s*\\d+\\s*,){3}\\s*\\d+(\\.\\d+)?\\s*\\)';
     private hslPattern: string = 'hsl\\(\\s*\\d+\\s*(,\\s*\\d+%\\s*){2}\\s*\\)';
@@ -118,7 +118,7 @@ export class ColorRegexPattern {
     }
 
     private join(...texts: string[]): string {
-        return texts.map(x => `${x}`).join('|');
+        return `(?:${texts.map(x => `${x}`).join('|')})`;
     }
 
     private wrapRegex(pattern: string): RegExp {
