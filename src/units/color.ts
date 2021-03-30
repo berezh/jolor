@@ -1,6 +1,6 @@
 import { ColorProperty } from 'csstype';
 import { Hsl, Rgb } from '../interfaces';
-import { ColorConverter, ColorLength } from './converter';
+import { ColorConverter } from './converter';
 import { HtmlColorName } from './html-color-name';
 import { ColorRegexPattern } from './pattern';
 
@@ -22,7 +22,9 @@ export class Color {
     }
 
     public get hex(): ColorProperty {
-        return `#${this.intToHex(this.innerRgb.r)}${this.intToHex(this.innerRgb.g)}${this.intToHex(this.innerRgb.b)}`;
+        return `#${this.intToHex(this.innerRgb.r)}${this.intToHex(
+            this.innerRgb.g,
+        )}${this.intToHex(this.innerRgb.b)}`;
     }
 
     // hsl\\(\\s*\\d+°\\s*(\\d+\\s*%){2}\\s*\\)
@@ -33,11 +35,11 @@ export class Color {
     public get valid(): boolean {
         return this.innerValid;
     }
-    
+
     private colorRegex = new ColorRegexPattern();
     private numberRegex = new RegExp('\\d+(\\.\\d+)?', 'gi');
 
-    private innerOpacity: number = 0;
+    private innerOpacity = 0;
 
     private innerRgb: Rgb = {
         r: 0,
@@ -51,7 +53,7 @@ export class Color {
         l: 0,
     };
 
-    private innerValid: boolean = false;
+    private innerValid = false;
 
     constructor(color?: ColorProperty);
     constructor(color: number[]);
@@ -94,7 +96,9 @@ export class Color {
                     };
                     rgbMode = true;
                 } else if (this.colorRegex.isRgb(colorKey)) {
-                    const numbers = colorKey.match(this.numberRegex) as RegExpExecArray;
+                    const numbers = colorKey.match(
+                        this.numberRegex,
+                    ) as RegExpExecArray;
                     this.innerRgb = {
                         r: this.getSubRgb(numbers[0]),
                         g: this.getSubRgb(numbers[1]),
@@ -102,16 +106,24 @@ export class Color {
                     };
                     rgbMode = true;
                 } else if (this.colorRegex.isRgba(colorKey)) {
-                    const numbers = colorKey.match(this.numberRegex) as RegExpExecArray;
+                    const numbers = colorKey.match(
+                        this.numberRegex,
+                    ) as RegExpExecArray;
                     this.innerRgb = {
                         r: this.getSubRgb(numbers[0]),
                         g: this.getSubRgb(numbers[1]),
                         b: this.getSubRgb(numbers[2]),
                     };
-                    this.innerOpacity = this.fixRange(parseFloat(numbers[3]), 0, 1);
+                    this.innerOpacity = this.fixRange(
+                        parseFloat(numbers[3]),
+                        0,
+                        1,
+                    );
                     rgbMode = true;
                 } else if (this.colorRegex.isHsl(colorKey)) {
-                    const numbers = colorKey.match(this.numberRegex) as RegExpExecArray;
+                    const numbers = colorKey.match(
+                        this.numberRegex,
+                    ) as RegExpExecArray;
                     this.innerHsl = {
                         h: parseFloat(numbers[0]),
                         s: this.fixRange(parseFloat(numbers[1]), 0, 100),
@@ -121,7 +133,11 @@ export class Color {
                     this.innerRgb = ColorConverter.hslToRgb(this.innerHsl);
                 }
             }
-        } else if (typeof p1 === 'number' && typeof p2 === 'number' && typeof p3 === 'number') {
+        } else if (
+            typeof p1 === 'number' &&
+            typeof p2 === 'number' &&
+            typeof p3 === 'number'
+        ) {
             this.innerRgb = {
                 r: p1,
                 g: p2,

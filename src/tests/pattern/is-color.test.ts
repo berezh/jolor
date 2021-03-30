@@ -28,4 +28,3 @@ it('regex: isColor border', () => {
     const colorRegex = new ColorRegexPattern();
     expect(colorRegex.isColor('1px solid LightSkyBlue')).toBeFalsy();
 });
-

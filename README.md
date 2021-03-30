@@ -2,7 +2,6 @@
 
 JavaScript color converter to HEX, RGB, RGBA, HSL
 
-
 <a href="https://www.npmjs.com/package/jolor">
     <img src="https://nodei.co/npm/jolor.png?mini=true">
 </a>
@@ -13,22 +12,35 @@ JavaScript color converter to HEX, RGB, RGBA, HSL
 npm install jolor
 ```
 
-## Usage
+## IsColor
 
-```js
+Checks if a string is HTML colors value
+
+```ts
+import { isColor } from 'jolor';
+
+isColor('white');
+isColor('#888');
+isColor('#f1f1f1');
+isColor('rgb(0,100,255)');
+isColor('hsl(100,50%,80%)');
+//=> true
+```
+
+## Color converting
+
+```ts
 import { toHex, toRgb, toRgba, toHsl } from 'jolor';
-
 
 toHex('deepskyblue');
 toHex(0, 191, 255);
 toHex([0, 191, 255]);
 toHex('rgb(0,191,255)');
-toHex('hsl(195,100%,50%)')
+toHex('hsl(195,100%,50%)');
 //=> '#00bfff'
 ```
 
 ![#00bfff](https://placehold.it/30/00bfff?text=+)
-
 
 ```js
 toRgb('indigo');
@@ -55,11 +67,9 @@ toRgba(244, 164, 96, 0.1);
 
 toRgba('hsl(28, 87%, 67%)');
 //=> 'rgba(244,166,98,1)'
-
 ```
 
 ![#f4a460](https://placehold.it/30/f4a460?text=+)
-
 
 ```js
 toHsl('purple');
@@ -71,4 +81,3 @@ toHsl('#800080');
 ```
 
 ![#800080](https://placehold.it/30/800080?text=+)
-

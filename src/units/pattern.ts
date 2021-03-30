@@ -1,14 +1,14 @@
 import { HtmlColorName } from './html-color-name';
 
 export class ColorRegexPattern {
-    private hex3Pattern: string = '#[a-f\\d]{3}';
-    private hex6Pattern: string = '#[a-f\\d]{6}';
+    private hex3Pattern = '#[a-f\\d]{3}';
+    private hex6Pattern = '#[a-f\\d]{6}';
     private hexPattern: string = this.join(this.hex6Pattern, this.hex3Pattern);
-    private rgbPattern: string = 'rgb\\((\\s*\\d+\\s*,){2}\\s*\\d+\\s*\\)';
-    private rgbaPattern: string = 'rgba\\((\\s*\\d+\\s*,){3}\\s*\\d+(\\.\\d+)?\\s*\\)';
-    private hslPattern: string = 'hsl\\(\\s*\\d+\\s*(,\\s*\\d+%\\s*){2}\\s*\\)';
+    private rgbPattern = 'rgb\\((\\s*\\d+\\s*,){2}\\s*\\d+\\s*\\)';
+    private rgbaPattern = 'rgba\\((\\s*\\d+\\s*,){3}\\s*\\d+(\\.\\d+)?\\s*\\)';
+    private hslPattern = 'hsl\\(\\s*\\d+\\s*(,\\s*\\d+%\\s*){2}\\s*\\)';
     private colorNamePattern: string = this.join(...Object.keys(HtmlColorName));
-    private anyColorPattern = this.join(
+    private colorPattern = this.join(
         this.hex3Pattern,
         this.hex6Pattern,
         this.rgbPattern,
@@ -32,10 +32,10 @@ export class ColorRegexPattern {
     private rgbaReg = this.wrapRegex(this.rgbaPattern);
     private hslReg = this.wrapRegex(this.hslPattern);
     private colorNameReg = this.wrapRegex(this.colorNamePattern);
-    private anyColorReg = new RegExp(this.anyColorPattern, 'gi');
+    private anyColorReg = new RegExp(this.colorPattern, 'gi');
 
-    public get test(): string {
-        return this.colorNamePattern;
+    public get colorPatternString(): string {
+        return this.colorPattern;
     }
 
     public get hex3(): RegExp {
@@ -95,13 +95,22 @@ export class ColorRegexPattern {
     }
 
     public isColor(text: string): boolean {
-        return this.isHex(text) || this.isRgb(text) || this.isRgba(text) || this.isHsl(text) || this.isColorName(text);
+        return (
+            this.isHex(text) ||
+            this.isRgb(text) ||
+            this.isRgba(text) ||
+            this.isHsl(text) ||
+            this.isColorName(text)
+        );
     }
 
-    public foreachColors(text: string, accessor: (matchedColor: string) => string): string {
+    public foreachColors(
+        text: string,
+        accessor: (matchedColor: string) => string,
+    ): string {
         const matches = (text || '').match(this.anyColorReg) || [];
         let result = text;
-        matches.forEach(x => {
+        matches.forEach((x) => {
             result = result.replace(x, accessor(x));
         });
 
@@ -118,7 +127,7 @@ export class ColorRegexPattern {
     }
 
     private join(...texts: string[]): string {
-        return `(?:${texts.map(x => `${x}`).join('|')})`;
+        return `(?:${texts.map((x) => `${x}`).join('|')})`;
     }
 
     private wrapRegex(pattern: string): RegExp {

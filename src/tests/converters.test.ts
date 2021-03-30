@@ -8,7 +8,9 @@ it('rgbToHsl', () => {
     const rgb = [74, 0, 128];
     hslToRgb(hsl, rgb);
 
-    expect(ColorConverter.hslToRgb({ h: hsl[0], s: hsl[1], l: hsl[2] })).toMatchObject({
+    expect(
+        ColorConverter.hslToRgb({ h: hsl[0], s: hsl[1], l: hsl[2] }),
+    ).toMatchObject({
         r: rgb[0],
         g: rgb[1],
         b: rgb[2],
